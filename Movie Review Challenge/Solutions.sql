@@ -36,6 +36,8 @@ where ratingDate IS NULL; /* Check NULL */
 /* Q5: Write a query to return the ratings data in a more readable format: reviewer name, movie title, stars, and ratingDate. Also, sort the data, first by reviewer name, then by movie title, and lastly by number of stars. */
 
 select distinct name, title, stars, ratingDate
-from Movie, Reviewer, Rating
-where Reviewer.rID = Rating.rID AND Movie.mID = Rating.mID
+from (Movie join Rating using (mID)) join Reviewer using (rID)
 ORDER BY NAME, TITLE, STARS;
+
+/* Q6: For all cases where the same reviewer rated the same movie twice and gave it a higher rating the second time, return the reviewer's name and the title of the movie. 
+ */
