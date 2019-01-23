@@ -36,9 +36,36 @@ from Student
 where sID in (select sID from Apply where major = 'EE' AND decision = 'N');
 
 
-/* Now, let's delete all students who applied to 2 or more majors */
+/* Let's see which students applied to more than 2 different majors */
 
 select sID, count(distinct major) /* Print the sID and the number of different majors applied to by that student) */
 from Apply
 group by sID /* This breaks the sID's into groups */
 having count(distinct major) > 2; /* This counts the number of different majors there are per sID */
+
+/* Now, let's delete all students who applied to 2 or more majors */
+
+delete from Student
+where sID in ( select sID
+from Apply
+group by sID /* This breaks the sID's into groups */
+having count(distinct major) > 2); /* This counts the number of different majors there are per sID */
+
+
+
+/* Accept applicants to Carnegie Melon with GPA < 3.6 but turn them into economic majors */
+
+select * from Apply 
+where cName = 'Carnegie Mellon' 
+  and sID in (select sID from Student where GPA < 3.6);
+  
+/* SubQuery: select all sID of students who have a GPA lower than 3.6)
+Outer: Select all students who applied to Carnegie Melon and have a GPA less than 3.6 */
+
+update Apply
+set decision = 'Y', major = 'Economics'
+where cName = 'Carnegie Mellon' 
+  and sID in (select sID from Student where GPA < 3.6);
+  
+
+
